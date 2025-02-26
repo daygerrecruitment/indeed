@@ -1,19 +1,20 @@
 import os
+import config.settings as settings
+
 from time import sleep
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-
-
 from scrapper.poster import JobPoster
 from utils.file_utils import read_txt
 from utils.link_utils import build_link
+from utils.link_utils import check_link
+from selenium.webdriver.common.by import By
 from utils.phone_numbers import extract_phone_numbers
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from utils.link_utils import check_link
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+
 
 
 
@@ -33,11 +34,11 @@ class JobScraper:
 
                 # Replace with your actual user data directory path
                 # For example, on Linux:
-                user_data_dir = "/home/robbertcazacu/.config/google-chrome"
+                user_data_dir = settings.CHROME_PATH
                 chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
 
                 # Specify the profile folder you want to use (e.g., "Profile 1")
-                chrome_options.add_argument("--profile-directory=Default")
+                chrome_options.add_argument(f"--profile-directory={settings.CHROME_PROFILE}")
                 # (Optional) Add other arguments if needed:
                 chrome_options.add_argument("--no-sandbox")
                 chrome_options.add_argument("--disable-dev-shm-usage")
@@ -61,7 +62,7 @@ class JobScraper:
                     captcha_el = WebDriverWait(driver,3).until(
                         EC.presence_of_element_located((By.XPATH,"/html/body/main/h1"))
                     )
-                    print("captcha found")
+                    sleep(25)
                 except Exception:
                     print("no captcha")
                 # Navigate to a website to test
